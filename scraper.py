@@ -1,42 +1,44 @@
 from selenium import webdriver
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup as bs
 import time
+import undetected_chromedriver as uc
 
 # Create Webdriver
 driver = webdriver.Chrome()
 
-champion = 'qiyana'
-role = 'mid'
-map_type = ''
 
-
-def create_url(champion, role='', map_type=''):
-    """Create URL based on champion, role and type. Champion in mandatory"""
-    url = ''
-    if map_type != '':
-        url = f'http://www.metasrc.com/lol/{map_type}/build/{champion}'
+def create_url(champion, role='', counter=''):
+    """Create URL based on champion, role and counter. Champion is mandatory"""
+    if counter != '':
+        url_to_navigate = f'https://probuildstats.com/champion/{champion}?matchup={counter}'
     elif role != '':
-        url = f'http://www.metasrc.com/lol/build/{champion}/{role}'
+        url_to_navigate = f'https://probuildstats.com/champion/{champion}?role={role}'
     else:
-        url = f'http://www.metasrc.com/lol/build/{champion}'
+        url_to_navigate = f'https://probuildstats.com/champion/{champion}'
 
-    return url
+    return url_to_navigate
 
+
+# dummy vars
+champion = 'aatrox'
+role = 'top'
+counter = 'garen'
 
 # Get Site in Chrome
-url = create_url(champion, role, map_type)
+url = create_url(champion, role, counter)
+print(url)
 driver.get(url)
 driver.implicitly_wait(5)
 
 # get the source code
 html = driver.page_source
-time.sleep(10)
 driver.quit()
 
 # Parse source code with bs4
-soup = BeautifulSoup(html, 'html.parser')
+soup = bs(html, 'html.parser')
 
-summoner1 = soup.select('#page-content > div:nth-child(1) > div:nth-child(1) > section > div > div > div > div:nth-child(1) > div._dcqhsp > div:nth-child(1) > img')[0]['alt']
-summoner2 = soup.select('#page-content > div:nth-child(1) > div:nth-child(1) > section > div > div > div > div:nth-child(1) > div._dcqhsp > div:nth-child(2) > img')[0]['alt']
-print(summoner1)
-print(summoner2)
+mythic1 = soup.select('div.champion-mythics > div.side-column_grid-item.top-items > div:nth-child(1) > div.item-image.mythic-item > img')[0]['alt']
+print(mythic1)
+mythic2 = soup.select('div.champion-mythics > div.side-column_grid-item.top-items > div:nth-child(2) > div.item-image.mythic-item > img')[0]['alt']
+print(mythic2)
+
