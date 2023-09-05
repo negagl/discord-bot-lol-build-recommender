@@ -24,9 +24,28 @@ async def on_ready():
     print(f'{bot.user.name} has connected to Discord!')
 
 
-@bot.command(name='hi')
+@bot.command(name='builder-hi')
 async def say_hi(ctx):
-    await ctx.send(f'Saludos')
+    await ctx.send(f'Saludos {ctx.message.author}!')
+
+
+@bot.command(name='builder-help')
+async def say_help(ctx):
+    help_message = """I was made to help you with the builds you may need without going to the browser and pícking some pages.
+    
+    Builds are obtained from https://probuildstats.com/ .
+    
+    To use the bot you can use the following commands:
+    
+        🫵 !builder-hi to say hi to the bot, be nice!
+        🫵 !builder-help to display help information like this.
+        🫵 !builder <champion-name> to look for a build for an specific champion.
+        🫵 !builder <champion-name> <role> if you want a build for a specific role.
+        🫵 !builder <champion-name> <role> <enemy-champíon> to look for a build against a specific champion.
+    
+    Translation to spanish is on work! Thanks for using me!"""
+
+    await ctx.send(help_message)
 
 
 @bot.command(name='builder')
@@ -70,8 +89,7 @@ async def display_build(ctx, *args):
         🗿. Mythic item: {build['mythic'][0]}.
         🗿. Legendary items: {build['items'][0]}, {build['items'][1]}, {build['items'][2]}, {build['items'][3]}.
         
-        Hope that works! Good match.
-    """
+    Hope that works! Good match."""
 
     await ctx.send(full_build_message)
 
