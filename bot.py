@@ -2,6 +2,7 @@ import os
 import discord
 from dotenv import load_dotenv
 from discord.ext import commands
+from scraper import get_build
 
 # Get token from environment
 load_dotenv()
@@ -31,7 +32,7 @@ async def say_hi(ctx):
 @bot.command(name='builder')
 async def display_build(ctx, *args):
     args_len = len(args)
-    champion, role, map_type = '', '', 'summoners rift'
+    champion, role, counter = '', '', ''
 
     match args_len:
         case 1:
@@ -39,7 +40,7 @@ async def display_build(ctx, *args):
         case 2:
             champion, role = args[:2]
         case 3:
-            champion, role, map_type = args[:3]
+            champion, role, counter = args[:3]
         case _:
             await ctx.send(f'There is no champion i can look a build for.')
             return
@@ -48,7 +49,31 @@ async def display_build(ctx, *args):
         await ctx.send(f'Champion not found in databases.')
         return
 
-    await ctx.send(f'Looking for a build for {champion} {role} in {map_type}...')
+    if counter.lower() not in CHAMPIONS_LIST.lower():
+        counter = ''
+
+    role_message = ''
+    if role != '':
+        role_message = f' {role}'
+
+    counter_message = ''
+    if counter != '':
+        counter_message = f' vs. {counter}'
+
+    await ctx.send(f'Looking for a build for {champion}{role_message}{counter_message}...')
+
+    build = get_build(champion, role, counter)
+    full_build_message = f"""You could build the following items as {champion}{role_message}{counter_message}:
+    
+        🗿. Summoner Spells: {build['summoners'][0]} and {build['summoners'][1]}.
+        🗿. Boots: {build['boots']}.
+        🗿. Mythic item: {build['mythic'][0]}.
+        🗿. Legendary items: {build['items'][0]}, {build['items'][1]}, {build['items'][2]}, {build['items'][3]}.
+        
+        Hope that works! Good match.
+    """
+
+    await ctx.send(full_build_message)
 
 
 bot.run(TOKEN)
