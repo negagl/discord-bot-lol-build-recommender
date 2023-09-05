@@ -1,11 +1,12 @@
-import requests, uuid, json
+import requests
+import uuid
 
 # Add your key and endpoint
 key = "cdb001451ed548d8aea92530cd96685d"
 endpoint = "https://api.cognitive.microsofttranslator.com"
 
-# location, also known as region.
-# required if you're using a multi-service or regional (not global) resource. It can be found in the Azure portal on the Keys and Endpoint page.
+# location, also known as region. required if you're using a multiservice or regional (not global) resource. It can
+# be found in the Azure portal on the Keys and Endpoint page.
 location = "eastus"
 
 path = '/translate'
@@ -19,7 +20,7 @@ params = {
 
 headers = {
     'Ocp-Apim-Subscription-Key': key,
-    # location required if you're using a multi-service or regional (not global) resource.
+    # location required if you're using a multiservice or regional (not global) resource.
     'Ocp-Apim-Subscription-Region': location,
     'Content-type': 'application/json',
     'X-ClientTraceId': str(uuid.uuid4()),
