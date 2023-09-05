@@ -37,8 +37,47 @@ driver.quit()
 # Parse source code with bs4
 soup = bs(html, 'html.parser')
 
-mythic1 = soup.select('div.champion-mythics > div.side-column_grid-item.top-items > div:nth-child(1) > div.item-image.mythic-item > img')[0]['alt']
-print(mythic1)
-mythic2 = soup.select('div.champion-mythics > div.side-column_grid-item.top-items > div:nth-child(2) > div.item-image.mythic-item > img')[0]['alt']
-print(mythic2)
+build = {
+    'summoners': [],
+    'boots': [],
+    'mythic': [],
+    'items': [],
+}
 
+
+# Summoners
+summoner1 = soup.select('div.champion-spells > div.side-column_grid-item.top-items > div:nth-child(1) > '
+                        'div.item-image > img')[0]['alt']
+summoner1 = summoner1.replace('Summoner Spell ', '')
+summoner2 = soup.select('div.champion-spells > div.side-column_grid-item.top-items > div:nth-child(2) > '
+                        'div.item-image > img')[0]['alt']
+summoner2 = summoner2.replace('Summoner Spell ', '')
+
+build['summoners'].extend([summoner1, summoner2])
+
+
+# Boots
+boots1 = soup.select('div.champion-skills > div.side-column_grid-item.top-items > div:nth-child(1) > '
+                     'div.item-image.completed-item > img')
+if len(boots1) != 0:
+    boots1 = boots1[0]['alt']
+    build['boots'].append(boots1)
+
+
+# Mythic
+mythic1 = soup.select('div.champion-mythics > div.side-column_grid-item.top-items > div:nth-child(1) > '
+                      'div.item-image.mythic-item > img')[0]['alt']
+build['mythic'].append(mythic1)
+
+
+# Items
+item1 = soup.select('div.champion-items > div.side-column_grid-item.top-items > div:nth-child(1) > '
+                    'div.item-image.completed-item > img')[0]['alt']
+item2 = soup.select('div.champion-items > div.side-column_grid-item.top-items > div:nth-child(2) > '
+                    'div.item-image.completed-item > img')[0]['alt']
+item3 = soup.select('div.champion-items > div.side-column_grid-item.top-items > div:nth-child(3) > '
+                    'div.item-image.completed-item > img')[0]['alt']
+item4 = soup.select('div.champion-items > div.side-column_grid-item.top-items > div:nth-child(4) > '
+                    'div.item-image.completed-item > img')[0]['alt']
+
+build['items'].extend([item1, item2, item3, item4])
