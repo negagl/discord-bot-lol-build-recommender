@@ -1,13 +1,13 @@
 import os
 import discord
-from dotenv import load_dotenv
 from discord.ext import commands
+from dotenv import load_dotenv
 from scraper import get_build
+import constants
 
 # Get token from environment
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
-CHAMPIONS_LIST = os.getenv('CHAMPIONS_LIST')
 
 # This represents the connection to discord
 # Handle events, states and interacts with Discord API's
@@ -16,7 +16,7 @@ intents.message_content = True
 intents.members = True
 
 # >>> START Bot as a Bot
-bot = commands.Bot(command_prefix='!', intents=intents)
+bot = commands.Bot(command_prefix='!builder', intents=intents)
 
 
 @bot.event
@@ -24,12 +24,12 @@ async def on_ready():
     print(f'{bot.user.name} has connected to Discord!')
 
 
-@bot.command(name='builder-hi')
+@bot.command(name='-hi')
 async def say_hi(ctx):
     await ctx.send(f'Saludos {ctx.message.author}!')
 
 
-@bot.command(name='builder-help')
+@bot.command(name='-help')
 async def say_help(ctx):
     help_message = """I was made to help you with the builds you may need without going to the browser and pícking some pages.
     
@@ -39,16 +39,16 @@ async def say_help(ctx):
     
         🫵 !builder-hi to say hi to the bot, be nice!
         🫵 !builder-help to display help information like this.
-        🫵 !builder <champion-name> to look for a build for an specific champion.
-        🫵 !builder <champion-name> <role> if you want a build for a specific role.
-        🫵 !builder <champion-name> <role> <enemy-champíon> to look for a build against a specific champion.
+        🫵 !builder-build <champion-name> to look for a build for an specific champion.
+        🫵 !builder-build <champion-name> <role> if you want a build for a specific role.
+        🫵 !builder-build <champion-name> <role> <enemy-champíon> to look for a build against a specific champion.
     
     Translation to spanish is on work! Thanks for using me!"""
 
     await ctx.send(help_message)
 
 
-@bot.command(name='builder')
+@bot.command(name='-build')
 async def display_build(ctx, *args):
     args_len = len(args)
     champion, role, counter = '', '', ''
@@ -64,11 +64,11 @@ async def display_build(ctx, *args):
             await ctx.send(f'There is no champion i can look a build for.')
             return
 
-    if champion.lower() not in CHAMPIONS_LIST.lower():
+    if champion.lower() not in constants.CHAMPIONS_LIST.lower():
         await ctx.send(f'Champion not found in databases.')
         return
 
-    if counter.lower() not in CHAMPIONS_LIST.lower():
+    if counter.lower() not in constants.CHAMPIONS_LIST.lower():
         counter = ''
 
     role_message = ''
